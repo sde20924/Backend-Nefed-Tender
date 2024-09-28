@@ -15,8 +15,11 @@ const { updateTenderApplicationBySeller } = require('../../controllers/tender/ap
 const { submitBid} = require('../../controllers/tender/tenderBidRoomController');
 const {getTenderBids} = require('../../controllers/tender/getTenderBidAmount');
 const {getActiveTenders} = require('../../controllers/tender/getActiveTenderOnly');
+const updateTenderDetails = require('../../controllers/tender/editTenderForm'); 
+const { cloneTenderController } = require('../../controllers/tender/cloneTenderController');
+const {deleteTenderController} = require('../../controllers/tender/deleteTenderController');
 
-// Route to get all tenders
+// Route to get all tenders 
 router.get('/tenders', getAllTendersController);
 router.get('/seller-tenders', verifyUser, getSellerTendersController);
 router.get('/tender/:id', getTenderDetailsController);
@@ -31,5 +34,10 @@ router.post("/create_audience", verifyUser, createAudienceController);
 router.post('/submit-file-url',verifyUser, submitFileUrl);
 router.post('/update-tender-application',verifyUser, updateTenderApplicationBySeller);
 router.post('/bid/submit',verifyUser,submitBid);
+router.post('/update-tender/:id', verifyUser, updateTenderDetails);
+router.post('/clone-tender/:id', verifyUser, cloneTenderController);
+
+router.delete('/delete-tender/:id', verifyUser, deleteTenderController);
+
 
 module.exports = router;
