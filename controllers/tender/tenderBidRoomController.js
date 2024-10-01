@@ -3,7 +3,7 @@ const db = require('../../config/config'); // PostgreSQL connection pool
 // Controller to handle bid submission
 const submitBid = async (req, res) => {
   try {
-    const { tender_id, bid_amount } = req.body; // Get tender_id and bid_amount from request body
+    const { tender_id, bid_amount ,fob_amount,freight_amount } = req.body; // Get tender_id and bid_amount from request body
     const { user_id } = req.user; // Assuming req.user contains authenticated user details
 
     // Ensure all required fields are provided
@@ -69,11 +69,11 @@ const submitBid = async (req, res) => {
 
     // Insert the bid data into the tender_bid_room table
     const insertBidQuery = `
-      INSERT INTO tender_bid_room (tender_id, user_id, bid_amount)
-      VALUES ($1, $2, $3)
+      INSERT INTO tender_bid_room (tender_id, user_id, bid_amount,fob_amount,freight_amount)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    const values = [tender_id, user_id, bid_amount];
+    const values = [tender_id, user_id, bid_amount,fob_amount,freight_amount];
     const bidResult = await db.query(insertBidQuery, values);
 
     // Send success response

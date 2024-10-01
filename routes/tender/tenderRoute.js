@@ -18,6 +18,8 @@ const {getActiveTenders} = require('../../controllers/tender/getActiveTenderOnly
 const updateTenderDetails = require('../../controllers/tender/editTenderForm'); 
 const { cloneTenderController } = require('../../controllers/tender/cloneTenderController');
 const {deleteTenderController} = require('../../controllers/tender/deleteTenderController');
+const { getAllAuctionBids } = require('../../controllers/tender/getAllAuctionBids');
+const { announceWinner } = require('../../controllers/tender/updateFirstAuctionWinner');
 
 // Route to get all tenders 
 router.get('/tenders', getAllTendersController);
@@ -28,6 +30,7 @@ router.get('/submitted-tender-applications', verifyUser, getSubmittedTenderAppli
 router.get('/tender/:id/files-status', getTenderFilesAndStatus );
 router.get('/tender/bid/:tender_id',verifyUser,getTenderBids);
 router.get('/tenders/active',verifyUser,getActiveTenders);
+router.get('/tender-Auction-bids/:tender_id',verifyUser, getAllAuctionBids);       
 
 router.post("/create_new_tender", verifyUser, createNewTenderController);
 router.post("/create_audience", verifyUser, createAudienceController);
@@ -36,6 +39,7 @@ router.post('/update-tender-application',verifyUser, updateTenderApplicationBySe
 router.post('/bid/submit',verifyUser,submitBid);
 router.post('/update-tender/:id', verifyUser, updateTenderDetails);
 router.post('/clone-tender/:id', verifyUser, cloneTenderController);
+router.post('/tender/announce-winner/:tender_id',verifyUser, announceWinner);
 
 router.delete('/delete-tender/:id', verifyUser, deleteTenderController);
 
