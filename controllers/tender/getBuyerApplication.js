@@ -8,10 +8,15 @@ const getTenderApplicationsByUser = async (req, res) => {
 
   try {
     // Fetch data from `tender_application` table where `user_id` matches the token's user ID
-    const result = await db.query(
-      `SELECT * FROM tender_application WHERE user_id = $1`,
-      [user_id]
-    );
+    // Join with `manage_tender` table to get `tender_title` based on `tender_id`
+    const query = `
+      SELECT ta.*, mt.tender_title
+      FROM tender_application ta
+      INNER JOIN manage_tender mt ON ta.tender_id = mt.tender_id
+      WHERE ta.user_id = $1
+    `;
+    
+    const result = await db.query(query, [user_id]);
 
     if (result.rows.length === 0) {
       return res.status(404).send({ msg: 'No tender applications found for the user', success: false });

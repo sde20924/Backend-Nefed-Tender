@@ -20,6 +20,7 @@ const { cloneTenderController } = require('../../controllers/tender/cloneTenderC
 const {deleteTenderController} = require('../../controllers/tender/deleteTenderController');
 const { getAllAuctionBids } = require('../../controllers/tender/getAllAuctionBids');
 const { announceWinner } = require('../../controllers/tender/updateFirstAuctionWinner');
+const {getTenderBidsByTenderId} = require('../../controllers/tender/getAllBidAmount');
 
 // Route to get all tenders 
 router.get('/tenders', getAllTendersController);
@@ -30,7 +31,8 @@ router.get('/submitted-tender-applications', verifyUser, getSubmittedTenderAppli
 router.get('/tender/:id/files-status', getTenderFilesAndStatus );
 router.get('/tender/bid/:tender_id',verifyUser,getTenderBids);
 router.get('/tenders/active',verifyUser,getActiveTenders);
-router.get('/tender-Auction-bids/:tender_id',verifyUser, getAllAuctionBids);       
+router.get('/tender-Auction-bids/:tender_id',verifyUser, getAllAuctionBids);  
+router.get('/tender-All-bidAmount/:tender_id',verifyUser,getTenderBidsByTenderId) ;    
 
 router.post("/create_new_tender", verifyUser, createNewTenderController);
 router.post("/create_audience", verifyUser, createAudienceController);

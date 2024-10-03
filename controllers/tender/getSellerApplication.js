@@ -4,11 +4,11 @@ const getSubmittedTenderApplications = async (req, res) => {
   const { user_id } = req.user; // Extract `user_id` from the token
 
   try {
-    // Step 1: Get `tender_id` from `manage_tender` table where `user_id` matches
+    // Step 1: Get `tender_id` and `tender_title` from `manage_tender` table where `user_id` matches
     const tenderIdsResult = await db.query(
-      `SELECT tender_id FROM manage_tender WHERE user_id = $1`,
+      `SELECT tender_id, tender_title FROM manage_tender WHERE user_id = $1`,
       [user_id]
-    );   
+    );
 
     // If no tenders found, return 404
     if (tenderIdsResult.rows.length === 0) {
@@ -20,10 +20,13 @@ const getSubmittedTenderApplications = async (req, res) => {
 
     // Step 2: Get applications from `tender_application` table where `tender_id` matches and `status` is "submitted"
     const applicationsResult = await db.query(
-      `SELECT * FROM tender_application WHERE tender_id = ANY($1::varchar[]) AND status = 'submitted'`,
+      `SELECT ta.*, mt.tender_title, b.first_name, b.last_name, b.company_name
+       FROM tender_application ta
+       INNER JOIN manage_tender mt ON ta.tender_id = mt.tender_id
+       INNER JOIN buyer b ON ta.user_id = b.user_id
+       WHERE ta.tender_id = ANY($1::varchar[]) AND ta.status = 'submitted'`,
       [tenderIds]
     );
-    
 
     // If no submitted applications found, return 404
     if (applicationsResult.rows.length === 0) {
