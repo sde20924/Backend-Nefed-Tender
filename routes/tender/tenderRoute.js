@@ -21,6 +21,10 @@ const {deleteTenderController} = require('../../controllers/tender/deleteTenderC
 const { getAllAuctionBids } = require('../../controllers/tender/getAllAuctionBids');
 const { announceWinner } = require('../../controllers/tender/updateFirstAuctionWinner');
 const {getTenderBidsByTenderId} = require('../../controllers/tender/getAllBidAmount');
+const { getTenderMiniSummary } = require('../../controllers/tender/getTenderMiniSummary');
+const { getSellerList} = require('../../controllers/tender/getsellerList');
+const { getBuyerList} = require('../../controllers/tender/getBuyerList');
+const { getManagerList} = require('../../controllers/tender/getManagerList');
 
 // Route to get all tenders 
 router.get('/tenders', getAllTendersController);
@@ -32,7 +36,11 @@ router.get('/tender/:id/files-status', getTenderFilesAndStatus );
 router.get('/tender/bid/:tender_id',verifyUser,getTenderBids);
 router.get('/tenders/active',verifyUser,getActiveTenders);
 router.get('/tender-Auction-bids/:tender_id',verifyUser, getAllAuctionBids);  
-router.get('/tender-All-bidAmount/:tender_id',verifyUser,getTenderBidsByTenderId) ;    
+router.get('/tender-All-bidAmount/:tender_id',verifyUser,getTenderBidsByTenderId) ;   
+router.get('/tender-mini-summary/:tender_id',verifyUser, getTenderMiniSummary); 
+router.get('/get-seller-list',verifyUser,getSellerList);
+router.get('/get-buyer-list',verifyUser,getBuyerList);
+router.get('/get-manager-list',verifyUser,getManagerList);
 
 router.post("/create_new_tender", verifyUser, createNewTenderController);
 router.post("/create_audience", verifyUser, createAudienceController);

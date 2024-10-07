@@ -9,7 +9,7 @@ const getAllAuctionBids = async (req, res) => {
             return res.status(400).json({ success: false, message: "Tender ID is required." });
         }
 
-        // Modified query to get all details for users with their lowest bid amount, including only needed fields
+        // Modified query to get all details for users with their lowest bid amount, including additional fields from manage_tender
         const query = `
             SELECT 
                 tbr.bid_id,
@@ -26,7 +26,13 @@ const getAllAuctionBids = async (req, res) => {
                 b.last_name,
                 b.company_name,
                 b.phone_number,
-                b.email
+                b.email,
+                b.user_id,
+                mt.dest_port,
+                mt.auct_start_time,
+                mt.auct_end_time,
+                mt.qty,
+                mt.emd_amt
             FROM 
                 tender_bid_room tbr
             INNER JOIN (
@@ -42,6 +48,8 @@ const getAllAuctionBids = async (req, res) => {
             ) lb ON tbr.user_id = lb.user_id AND tbr.bid_amount = lb.lowest_bid_amount
             INNER JOIN 
                 buyer b ON tbr.user_id = b.user_id
+            INNER JOIN 
+                manage_tender mt ON tbr.tender_id = mt.tender_id
             WHERE 
                 tbr.tender_id = $1;
         `;
