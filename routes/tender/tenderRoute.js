@@ -26,6 +26,11 @@ const { getSellerList} = require('../../controllers/tender/getsellerList');
 const { getBuyerList} = require('../../controllers/tender/getBuyerList');
 const { getManagerList} = require('../../controllers/tender/getManagerList');
 
+const {getHomepageContent} = require("../../controllers/tender/getHomePageContent");
+const {updateHomepageContent} = require("../../controllers/tender/updateHomePageContent");
+
+const {getTenderAuctionItemsController} = require("../../controllers/tender/getTenderAuctionItemsController")
+
 // Route to get all tenders 
 router.get('/tenders', getAllTendersController);
 router.get('/seller-tenders', verifyUser, getSellerTendersController);
@@ -42,6 +47,9 @@ router.get('/get-seller-list',verifyUser,getSellerList);
 router.get('/get-buyer-list',verifyUser,getBuyerList);
 router.get('/get-manager-list',verifyUser,getManagerList);
 
+router.get('/get-home-page-content', getHomepageContent);
+router.get('/get-tender-auction-items/:tender_id',verifyUser,getTenderAuctionItemsController);
+
 router.post("/create_new_tender", verifyUser, createNewTenderController);
 router.post("/create_audience", verifyUser, createAudienceController);
 router.post('/submit-file-url',verifyUser, submitFileUrl);
@@ -50,6 +58,8 @@ router.post('/bid/submit',verifyUser,submitBid);
 router.post('/update-tender/:id', verifyUser, updateTenderDetails);
 router.post('/clone-tender/:id', verifyUser, cloneTenderController);
 router.post('/tender/announce-winner/:tender_id',verifyUser, announceWinner);
+
+router.post('/update-home-page-content',verifyUser,updateHomepageContent);
 
 router.delete('/delete-tender/:id', verifyUser, deleteTenderController);
 

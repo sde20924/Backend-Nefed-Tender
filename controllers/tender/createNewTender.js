@@ -36,9 +36,10 @@ const createNewTenderController = asyncErrorHandler(async (req, res) => {
         qty_split_criteria,
         counter_offr_accept_timer,
         img_url,
-        auction_type = null,
+        auction_type,
         tender_id,
         audi_key = null,
+        auct_field, // Auction field data
     } = req.body;
 
     // Validation to ensure required fields are provided
@@ -52,9 +53,10 @@ const createNewTenderController = asyncErrorHandler(async (req, res) => {
     }
 
     try {
-         // Check and parse stringified JSON values if necessary
-         const parsedAttachments = typeof attachments === 'string' ? JSON.parse(attachments) : attachments;
-         const parsedCustomForm = typeof custom_form === 'string' ? JSON.parse(custom_form) : custom_form;
+        // Check and parse stringified JSON values if necessary
+        const parsedAttachments = typeof attachments === 'string' ? JSON.parse(attachments) : attachments;
+        const parsedCustomForm = typeof custom_form === 'string' ? JSON.parse(custom_form) : custom_form;
+        const parsedAuctionField = typeof auct_field === 'string' ? JSON.parse(auct_field) : auct_field;
 
         // Begin a transaction
         await db.query('BEGIN');
@@ -127,7 +129,7 @@ const createNewTenderController = asyncErrorHandler(async (req, res) => {
                 qty_split_criteria, 
                 counter_offr_accept_timer, 
                 img_url, 
-                'reverse', 
+                auction_type, 
                 tender_id, 
                 audi_key,
             ]
@@ -149,6 +151,20 @@ const createNewTenderController = asyncErrorHandler(async (req, res) => {
                 ) 
                 VALUES ($1, $2, $3, $4, $5)`,
                 [createdTenderId, key, label, extension, maxFileSize]
+            );
+        }
+
+        // Insert auction field data into tender_auct_items table
+        for (const auctionItem of parsedAuctionField) {
+            const { name, quantity } = auctionItem;
+            await db.query(
+                `INSERT INTO tender_auct_items (
+                    tender_id, 
+                    auct_item, 
+                    auct_qty
+                ) 
+                VALUES ($1, $2, $3)`,
+                [createdTenderId, name, quantity]
             );
         }
 
