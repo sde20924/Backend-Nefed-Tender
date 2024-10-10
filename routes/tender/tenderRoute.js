@@ -48,6 +48,7 @@ router.get('/get-buyer-list',verifyUser,getBuyerList);
 router.get('/get-manager-list',verifyUser,getManagerList);
 
 router.get('/get-home-page-content', getHomepageContent);
+
 router.get('/get-tender-auction-items/:tender_id',verifyUser,getTenderAuctionItemsController);
 
 router.post("/create_new_tender", verifyUser, createNewTenderController);

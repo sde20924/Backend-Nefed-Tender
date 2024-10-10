@@ -4,7 +4,6 @@ const asyncErrorHandler = require("../../utils/asyncErrorHandler"); // Async err
 // Controller to fetch auction items for a specific tender
 const getTenderAuctionItemsController = asyncErrorHandler(async (req, res) => {
     const { tender_id } = req.params; // Getting tender_id from request params
-    console.log(tender_id);
 
     // Validation to ensure tender_id is provided
     if (!tender_id) {
@@ -17,9 +16,6 @@ const getTenderAuctionItemsController = asyncErrorHandler(async (req, res) => {
             `SELECT * FROM tender_auct_items WHERE tender_id LIKE $1`,
             [`%${tender_id.replace('tender_', '')}%`]
         );
-        
-        console.log(auctionItems);
-        console.log(auctionItems.rows);
 
         // If no auction items found, send a 404 response
         if (auctionItems.rows.length === 0) {
